@@ -26,10 +26,10 @@
 (function () {
     'use strict';
 
-    function initHamburgerDrawer() {
-        var hamburger = document.getElementById('layout-drawer-hamburger');
-        var drawer = document.getElementById('hamburger-drawer');
-        var overlay = document.getElementById('layout-drawer-overlay');
+    function initHamburgerDrawer(hamburgerId, drawerId, overlayId) {
+        var hamburger = document.getElementById(hamburgerId);
+        var drawer = document.getElementById(drawerId);
+        var overlay = document.getElementById(overlayId);
         var container = document.getElementById('dm-outer-wrapper');
         if (!hamburger || !drawer || !overlay || !container) {
             return;
@@ -184,15 +184,20 @@
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () {
-            initHamburgerDrawer();
-            initEntranceAnimations();
-            initFaqAccordions();
-        });
-    } else {
-        initHamburgerDrawer();
+    function init() {
+        // Desktop export's own hamburger (used at tablet width, 768-1024px).
+        initHamburgerDrawer('layout-drawer-hamburger', 'hamburger-drawer', 'layout-drawer-overlay');
+        // Grafted-in mobile export's hamburger (used below 768px) -- see the
+        // "Mobile-specific header/drawer" block in Style/site.css for why this
+        // is a second, separate set of elements rather than a shared one.
+        initHamburgerDrawer('mobile-layout-drawer-hamburger', 'mobile-hamburger-drawer', 'mobile-layout-drawer-overlay');
         initEntranceAnimations();
         initFaqAccordions();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 }());
